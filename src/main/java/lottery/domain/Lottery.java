@@ -1,9 +1,9 @@
-package level1.domain;
+package lottery.domain;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import level1.exception.DuplicateLotteryNumberException;
+import lottery.exception.DuplicateLotteryNumberException;
 
 public class Lottery {
 

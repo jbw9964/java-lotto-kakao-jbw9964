@@ -1,14 +1,14 @@
-package level1;
+package lottery;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import level1.domain.AnswerLottery;
-import level1.domain.Lottery;
-import level1.exception.InvalidLotteryNumberLengthException;
-import level1.exception.InvalidLotteryNumberRangeException;
+import lottery.domain.AnswerLottery;
+import lottery.domain.Lottery;
+import lottery.exception.InvalidLotteryNumberLengthException;
+import lottery.exception.InvalidLotteryNumberRangeException;
 
 public class LotteryGenerator {
 

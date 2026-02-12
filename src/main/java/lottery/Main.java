@@ -1,10 +1,10 @@
-package level1;
+package lottery;
 
 import java.util.List;
-import level1.domain.AnswerLottery;
-import level1.domain.Lottery;
-import level1.domain.Match;
-import level1.exception.InsufficientPurchasePriceException;
+import lottery.domain.AnswerLottery;
+import lottery.domain.Lottery;
+import lottery.domain.Match;
+import lottery.exception.InsufficientPurchasePriceException;
 
 public class Main {
 

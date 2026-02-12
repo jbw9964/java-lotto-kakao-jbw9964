@@ -1,11 +1,11 @@
-package level1;
+package lottery;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import level1.domain.AnswerLottery;
-import level1.domain.Lottery;
-import level1.domain.Match;
+import lottery.domain.AnswerLottery;
+import lottery.domain.Lottery;
+import lottery.domain.Match;
 
 public class Report {
 

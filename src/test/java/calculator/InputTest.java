@@ -1,4 +1,4 @@
-package level0;
+package calculator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,9 +35,9 @@ class InputTest {
 
         Numbers numbers = input.getNumbers();
 
-        level0.Number number1 = new level0.Number(1);
-        Number number2 = new level0.Number(2);
-        level0.Number number3 = new level0.Number(3);
+        calculator.Number number1 = new calculator.Number(1);
+        Number number2 = new calculator.Number(2);
+        calculator.Number number3 = new calculator.Number(3);
 
         Numbers expectedNumbers = new Numbers(number1, number2, number3);
         assertThat(numbers).isEqualTo(expectedNumbers);

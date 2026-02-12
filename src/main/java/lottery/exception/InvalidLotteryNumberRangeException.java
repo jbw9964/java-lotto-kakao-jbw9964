@@ -1,4 +1,4 @@
-package level1.exception;
+package lottery.exception;
 
 public class InvalidLotteryNumberRangeException extends RuntimeException {
 

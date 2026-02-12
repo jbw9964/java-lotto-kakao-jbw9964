@@ -1,7 +1,7 @@
-package level1.domain;
+package lottery.domain;
 
 import java.util.List;
-import level1.exception.DuplicateLotteryNumberException;
+import lottery.exception.DuplicateLotteryNumberException;
 
 public class AnswerLottery extends Lottery {
 

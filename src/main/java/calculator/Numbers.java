@@ -1,4 +1,4 @@
-package level0;
+package calculator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.Objects;
 
 public class Numbers {
 
-    private final List<level0.Number> numbers;
+    private final List<calculator.Number> numbers;
 
-    public Numbers(level0.Number... numbers) {
+    public Numbers(calculator.Number... numbers) {
         this.numbers = Arrays.asList(numbers);
     }
 
@@ -16,12 +16,12 @@ public class Numbers {
         this.numbers = numbers;
     }
 
-    public level0.Number getSum() {
+    public calculator.Number getSum() {
         int result = 0;
-        for (level0.Number number : numbers) {
+        for (calculator.Number number : numbers) {
             result += number.getValue();
         }
-        return new level0.Number(result);
+        return new calculator.Number(result);
     }
 
     @Override

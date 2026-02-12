@@ -1,4 +1,4 @@
-package level1.domain;
+package lottery.domain;
 
 import java.util.Arrays;
 

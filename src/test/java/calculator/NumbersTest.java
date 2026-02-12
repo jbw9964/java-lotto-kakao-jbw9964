@@ -1,4 +1,4 @@
-package level0;
+package calculator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,13 +15,13 @@ class NumbersTest {
         Numbers numbers;
 
         {
-            level0.Number num1 = new level0.Number(1);
-            level0.Number num2 = new level0.Number(2);
-            Number num3 = new level0.Number(3);
+            calculator.Number num1 = new calculator.Number(1);
+            calculator.Number num2 = new calculator.Number(2);
+            Number num3 = new calculator.Number(3);
 
             numbers = new Numbers(num1, num2, num3);
         }
 
-        assertThat(numbers.getSum()).isEqualTo(new level0.Number(sum));
+        assertThat(numbers.getSum()).isEqualTo(new calculator.Number(sum));
     }
 }

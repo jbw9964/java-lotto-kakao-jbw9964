@@ -1,4 +1,4 @@
-package level0;
+package calculator;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -25,7 +25,7 @@ class NumberTest {
     })
     @DisplayName("숫자가 아닌 입력은 RuntimeException 이 발생한다.")
     void testInvalidValue(String value) {
-        assertThatThrownBy(() -> new level0.Number(value))
+        assertThatThrownBy(() -> new calculator.Number(value))
                 .hasMessage("숫자가 아닌 입력입니다.")
                 .isInstanceOf(RuntimeException.class);
     }

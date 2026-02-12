@@ -1,4 +1,4 @@
-package level1;
+package lottery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
-import level1.domain.AnswerLottery;
-import level1.domain.Lottery;
-import level1.domain.Match;
+import lottery.domain.AnswerLottery;
+import lottery.domain.Lottery;
+import lottery.domain.Match;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
