@@ -1,95 +1,126 @@
 package lottery;
 
 import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.stream.Stream;
+import lottery.component.LotteryResultProvider;
+import lottery.component.LotterySeller;
+import lottery.component.MatchPrizeResolver;
+import lottery.component.MatchTypeResolver;
+import lottery.component.RandomLotteryGenerator;
 import lottery.domain.AnswerLottery;
 import lottery.domain.Lottery;
-import lottery.domain.Match;
-import lottery.exception.InsufficientPurchasePriceException;
+import lottery.domain.LotteryExpression;
+import lottery.domain.LotteryResult;
+import lottery.domain.MatchType;
+import lottery.domain.Quantity;
+import lottery.io.input.InputProvider;
+import lottery.io.input.UserInputInvoker;
+import lottery.io.input.UserInputQuery;
+import lottery.io.output.LotteryDescriber;
+import lottery.io.output.LotteryResultDescriber;
+import lottery.io.output.MatchDescriber;
 
 public class Main {
 
-    private static final int LOTTERY_PRICE = 1_000;
+    private static final UserInputInvoker userInputInvoker;
+    private static final LotteryDescriber lotteryDescriber;
+    private static final LotteryResultDescriber lotteryResultDescriber;
 
-    private static final InputHandler inputHandler;
-    private static final LotteryGenerator lotteryGenerator;
+    private static final LotterySeller lotterySeller;
+    private static final RandomLotteryGenerator randomLotteryGenerator;
+    private static final LotteryResultProvider lotteryResultProvider;
+
 
     static {
-        inputHandler = new InputHandler();
-        lotteryGenerator = new LotteryGenerator();
+        userInputInvoker = new UserInputInvoker(
+                new UserInputQuery(),
+                new InputProvider(new Scanner(
+                        System.in
+                ))
+        );
+        lotteryDescriber = new LotteryDescriber(
+                LotteryExpression.defaultExpression()
+        );
+        lotteryResultDescriber = new LotteryResultDescriber(
+                MatchType.valuesExcept(MatchType.NONE),
+                new MatchDescriber()
+        );
+
+        lotterySeller = new LotterySeller();
+        randomLotteryGenerator = new RandomLotteryGenerator(
+                new Random()
+        );
+        lotteryResultProvider = new LotteryResultProvider(
+                new MatchTypeResolver(),
+                new MatchPrizeResolver()
+        );
     }
 
     public static void main(String[] args) {
-        int purchasePrice = receivePurchasePrice();
 
-        List<Lottery> givenLotteries = purchaseLotteries(purchasePrice);
+        int purchasePrice = userInputInvoker.getPurchasePriceInput();
 
-        AnswerLottery answerLottery = receiveAnswerLottery();
+        Quantity totalLotteryQuantity = lotterySeller.issueLotteryQuantity(purchasePrice);
 
-        Report report = new Report(answerLottery, givenLotteries);
+        List<Lottery> purchasedLotteries = getAllLotteryInputsAndPrintAllWith(totalLotteryQuantity);
 
-        printLotteryReport(purchasePrice, report);
-    }
+        AnswerLottery answerLottery = userInputInvoker.getAnswerLotteryInput();
 
-    private static int receivePurchasePrice() {
-        System.out.println("\n구입금액을 입력해 주세요.");
-
-        int purchasePrice = inputHandler.inputPrice();
-
-        if (purchasePrice < LOTTERY_PRICE) {
-            throw new InsufficientPurchasePriceException(String.format(
-                    "구입 금액은 %d 보다 크거나 같아야 합니다.",
-                    LOTTERY_PRICE
-            ));
-        }
-
-        return purchasePrice;
-    }
-
-    private static List<Lottery> purchaseLotteries(int purchasePrice) {
-        int numberOfLotteries = purchasePrice / LOTTERY_PRICE;
-
-        System.out.printf("\n%d 개를 구매했습니다.\n", numberOfLotteries);
-
-        List<Lottery> randomLotteries = lotteryGenerator.generateRandomLotteries(numberOfLotteries);
-
-        randomLotteries.stream()
-                .map(Lottery::represent)
-                .forEach(System.out::println);
-
-        return randomLotteries;
-    }
-
-    private static AnswerLottery receiveAnswerLottery() {
-        System.out.println("\n지난 주 당첨 번호를 입력해 주세요.");
-
-        List<Integer> lastAnswerLotteryNumbers = inputHandler.inputLastAnswerLottery();
-
-        System.out.println("보너스 볼을 입력해 주세요.");
-
-        int bonusLotteryNumber = inputHandler.inputBonusLotteryNumber();
-
-        return lotteryGenerator.generateAnswerLottery(lastAnswerLotteryNumbers, bonusLotteryNumber);
-    }
-
-    private static void printLotteryReport(int purchasePrice, Report report) {
-        Match[] matchesInConcern = Match.valuesExcept(Match.NONE);
-
-        System.out.println("\n당첨 통계\n---------");
-
-        for (Match match : matchesInConcern) {
-            long matchCount = report.getMatchCount(match);
-            System.out.printf(
-                    "%s - %d 개\n",
-                    match.getDescription(), matchCount
-            );
-        }
-
-        long totalPrize = report.getTotalPrize();
-        double profitRate = (double) totalPrize / purchasePrice;
-
-        System.out.printf(
-                "총 수익률은 %.2f 입니다.\n",
-                profitRate
+        LotteryResult lotteryResult = lotteryResultProvider.getResultFrom(
+                answerLottery, purchasedLotteries
         );
+
+        String report = lotteryResultDescriber.describe(purchasePrice, lotteryResult);
+
+        System.out.println(report);
+    }
+
+    private static List<Lottery> getAllLotteryInputsAndPrintAllWith(Quantity totalLotteryQuantity) {
+        int numberOfManualLotteries = userInputInvoker.getNumberOfManualLotteriesInput();
+
+        List<Lottery> manualLotteries = getManualLotteries(
+                totalLotteryQuantity, numberOfManualLotteries
+        );
+
+        List<Lottery> randomLotteries = getRemainingRandomLotteries(totalLotteryQuantity);
+
+        return concatLotteriesAndPrintAll(manualLotteries, randomLotteries);
+    }
+
+    private static List<Lottery> getManualLotteries(
+            Quantity remainingLotteryQuantity, int numberOfManualLotteries
+    ) {
+        remainingLotteryQuantity.reduceQuantity(numberOfManualLotteries);
+
+        return userInputInvoker.getManaulLotteriesInput(numberOfManualLotteries);
+    }
+
+    private static List<Lottery> getRemainingRandomLotteries(
+            Quantity remainingLotteryQuantity
+    ) {
+        int numberOfRandomLotteries = remainingLotteryQuantity.reduceAll();
+
+        return randomLotteryGenerator.generateRandomLotteries(numberOfRandomLotteries);
+    }
+
+    private static List<Lottery> concatLotteriesAndPrintAll(
+            List<Lottery> manualLotteries, List<Lottery> randomLotteries
+    ) {
+        System.out.printf(
+                "\n수동으로 %d장, 자동으로 %d개를 구매했습니다.\n",
+                manualLotteries.size(), randomLotteries.size()
+        );
+
+        List<Lottery> allLotteries = Stream.concat(
+                manualLotteries.stream(), randomLotteries.stream()
+        ).toList();
+
+        String lotteryRepresentation = lotteryDescriber.describe(allLotteries);
+
+        System.out.println(lotteryRepresentation);
+
+        return allLotteries;
     }
 }
