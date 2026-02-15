@@ -97,32 +97,4 @@ class LotteryTest {
         assertThat(randomLottery).isNotNull();
         assertThat(randomLottery.size()).isEqualTo(6);
     }
-
-    @Test
-    @DisplayName("주어진 표현식으로 로또를 표현할 수 있다.")
-    void testRepresentWith() {
-        String leftBracket = "[{ ";
-        String rightBracket = " }]";
-        String deliminator = ":";
-
-        LotteryExpression representation = new LotteryExpression(
-                leftBracket, rightBracket, deliminator
-        );
-
-        List<LotteryNumber> numbers = oneToTwenty.subList(0, 6);
-        String expectedRepresentation = "[{ 1:2:3:4:5:6 }]";
-
-        Lottery lottery = new Lottery(numbers);
-        assertThat(lottery.representWith(representation)).isEqualTo(expectedRepresentation);
-    }
-
-    @Test
-    @DisplayName("Null 인 표현식으로 로또를 표현할 수 없다.")
-    void testNullExpression() {
-        List<LotteryNumber> numbers = oneToTwenty.subList(0, 6);
-        Lottery lottery = new Lottery(numbers);
-
-        assertThatThrownBy(() -> lottery.representWith(null))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
 }

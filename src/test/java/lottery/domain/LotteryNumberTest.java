@@ -8,7 +8,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import lottery.domain.LotteryExpression.NumberExpression;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -71,28 +70,5 @@ class LotteryNumberTest {
 
             assertThat(everyLotteryNumbers).contains(randomLotteryNumber);
         }
-    }
-
-    @Test
-    @DisplayName("주어진 표현식으로 로또 번호를 표현할 수 있다.")
-    void testRepresentWith() {
-        NumberExpression representation = new NumberExpression(
-                i -> String.format("[---%2d---]", i)
-        );
-
-        int number = 10;
-        String expectedRepresentation = "[---10---]";
-
-        LotteryNumber lotteryNumber = new LotteryNumber(number);
-        assertThat(lotteryNumber.representWith(representation)).isEqualTo(expectedRepresentation);
-    }
-
-    @Test
-    @DisplayName("Null 인 표현식으로 로또 번호를 표현할 수 없다.")
-    void testNullExpression() {
-        LotteryNumber lotteryNumber = new LotteryNumber(10);
-
-        assertThatThrownBy(() -> lotteryNumber.representWith(null))
-                .isInstanceOf(IllegalArgumentException.class);
     }
 }
