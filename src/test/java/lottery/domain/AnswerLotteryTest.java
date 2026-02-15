@@ -4,44 +4,45 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
-import lottery.exception.DuplicateLotteryNumberException;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class AnswerLotteryTest {
 
-    private static final List<Integer> lotteryNumbers = List.of(1, 2, 3);
+    private static final List<LotteryNumber> answerLotteryNumbers = IntStream.rangeClosed(1, 6)
+            .mapToObj(LotteryNumber::new)
+            .toList();
 
     @Test
     @DisplayName("보너스 볼은 기존 로또 번호와 중복되지 않는다.")
     void testDuplicateBonusLottery() {
-        for (Integer bonusLotteryNumber : lotteryNumbers) {
-            assertThatThrownBy(() -> new AnswerLottery(lotteryNumbers, bonusLotteryNumber))
-                    .isInstanceOf(DuplicateLotteryNumberException.class);
+        for (LotteryNumber bonusLotteryNumber : answerLotteryNumbers) {
+            assertThatThrownBy(() -> new AnswerLottery(answerLotteryNumbers, bonusLotteryNumber))
+                    .isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     @DisplayName("보너스 번호가 포함되는지 확인할 수 있다.")
     void testContainsBonusNumber() {
-        int bonusNumber1 = 10, bonusNumber2 = 20;
+        int bonusNumber = 7;
+        LotteryNumber bonusLotteryNumber = new LotteryNumber(bonusNumber);
 
-        //noinspection ConstantValue
-        assert bonusNumber1 != bonusNumber2;
-        assert !lotteryNumbers.contains(bonusNumber1);
-        assert !lotteryNumbers.contains(bonusNumber2);
+        AnswerLottery answerLottery = new AnswerLottery(answerLotteryNumbers, bonusLotteryNumber);
 
-        AnswerLottery answerLottery1 = new AnswerLottery(lotteryNumbers, bonusNumber1);
-        AnswerLottery answerLottery2 = new AnswerLottery(lotteryNumbers, bonusNumber2);
+        List<LotteryNumber> bonusNumberExcluded = answerLotteryNumbers;
+        List<LotteryNumber> bonusNumberIncluded = Stream.of(1, 2, 3, 4, 5, bonusNumber)
+                .map(LotteryNumber::new)
+                .toList();
 
-        Lottery lottery1 = new Lottery(List.of(bonusNumber1));
-        Lottery lottery2 = new Lottery(List.of(bonusNumber2));
+        assertThat(bonusNumberExcluded).doesNotContain(bonusLotteryNumber);
 
-        assertThat(answerLottery1.containsBonusNumber(lottery1)).isTrue();
-        assertThat(answerLottery1.containsBonusNumber(lottery2)).isFalse();
+        Lottery bonusIncludedLottery = new Lottery(bonusNumberIncluded);
+        Lottery bonusExcludedLottery = new Lottery(bonusNumberExcluded);
 
-        assertThat(answerLottery2.containsBonusNumber(lottery1)).isFalse();
-        assertThat(answerLottery2.containsBonusNumber(lottery2)).isTrue();
-
+        assertThat(answerLottery.containsBonusNumber(bonusIncludedLottery)).isTrue();
+        assertThat(answerLottery.containsBonusNumber(bonusExcludedLottery)).isFalse();
     }
 }
