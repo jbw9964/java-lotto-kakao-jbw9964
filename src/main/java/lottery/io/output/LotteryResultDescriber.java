@@ -20,6 +20,15 @@ public class LotteryResultDescriber {
     }
 
     public String describe(int purchasedPrice, LotteryResult lotteryResult) {
+
+        if (purchasedPrice < 0) {
+            throw new IllegalArgumentException("구입 금액은 0 보다 작을 수 없습니다.");
+        }
+
+        if (lotteryResult == null) {
+            throw new IllegalArgumentException("로또 결과는 Null 일 수 없습니다.");
+        }
+
         StringBuilder sb = getResultHeader();
 
         this.buildMatchResult(lotteryResult, sb);
