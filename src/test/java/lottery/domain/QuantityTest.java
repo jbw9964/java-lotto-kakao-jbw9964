@@ -1,9 +1,8 @@
 package lottery.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,66 +11,53 @@ class QuantityTest {
     @Test
     @DisplayName("0 보다 작은 수량은 존재할 수 없다.")
     void testInvalidQuantity() {
-        Assertions.assertThatThrownBy(() -> new Quantity(-1))
+        assertThatThrownBy(() -> new Quantity(-1))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    @DisplayName("특정 수량을 소비할 수 있다.")
+    @DisplayName("특정 양을 소비한 수량을 제공받을 수 있다.")
     void testReduceQuantity() {
-        int amount = 10;
-        int reduce = 3;
-        int remainingAmount = amount - reduce;
+        int totalAmount = 5;
 
-        Quantity quantity = new Quantity(amount);
-        Quantity remainingQuantity = new Quantity(remainingAmount);
+        Quantity totalQuantity = new Quantity(totalAmount);
 
-        assertThatCode(() -> quantity.reduceQuantity(reduce))
-                .doesNotThrowAnyException();
+        for (int reducingAmount = 0; reducingAmount <= totalAmount; reducingAmount++) {
 
-        assertThat(quantity).isEqualTo(remainingQuantity);
-        assertThat(remainingQuantity).isEqualTo(quantity);
+            Quantity reducingQuantity = new Quantity(reducingAmount);
+
+            Quantity expectedQuantity = new Quantity(
+                    totalAmount - reducingAmount
+            );
+
+            assertThat(totalQuantity.reduceQuantity(reducingAmount))
+                    .isEqualTo(expectedQuantity);
+            assertThat(totalQuantity.reduceQuantity(reducingQuantity))
+                    .isEqualTo(expectedQuantity);
+        }
     }
 
     @Test
-    @DisplayName("남아있는 모든 수량을 소비할 수 있다.")
-    void testReduceAll() {
-        int amount = 5;
-
-        Quantity quantity = new Quantity(amount);
-        Quantity zeroQuantity1 = new Quantity(0);
-        Quantity zeroQuantity2 = new Quantity(0);
-
-        assertThat(quantity.reduceAll()).isEqualTo(amount);
-        assertThat(quantity).isEqualTo(zeroQuantity1);
-        assertThat(zeroQuantity1).isEqualTo(quantity);
-
-        assertThat(zeroQuantity1.reduceAll()).isEqualTo(0);
-        assertThat(zeroQuantity1).isEqualTo(zeroQuantity2);
-        assertThat(zeroQuantity2).isEqualTo(zeroQuantity1);
-    }
-
-    @Test
-    @DisplayName("남은 재고보다 많은 수량은 소비할 수 없다.")
+    @DisplayName("남은 수량보다 더 많은 수량은 소비할 수 없다.")
     void testInvalidReduceQuantity() {
-        int amount = 3;
-        int reduce = amount + 1;
+        int totalAmount = 3;
+        int reducingAmount = totalAmount + 1;
 
-        Quantity quantity = new Quantity(amount);
+        Quantity quantity = new Quantity(totalAmount);
 
-        Assertions.assertThatThrownBy(() -> quantity.reduceQuantity(reduce))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> quantity.reduceQuantity(reducingAmount))
+                .isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("감소시킬 수량은 0 보다 작을수 없다.")
     void testNegativeReduceAmount() {
-        int amount = 5;
-        int reduce = -1;
+        int totalAmount = 5;
+        int reducingAmount = -1;
 
-        Quantity quantity = new Quantity(amount);
+        Quantity quantity = new Quantity(totalAmount);
 
-        Assertions.assertThatThrownBy(() -> quantity.reduceQuantity(reduce))
+        assertThatThrownBy(() -> quantity.reduceQuantity(reducingAmount))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

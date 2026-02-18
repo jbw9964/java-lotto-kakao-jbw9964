@@ -1,50 +1,32 @@
 package lottery.domain;
 
-import java.util.Objects;
+public record Quantity(
+        int amount
+) {
 
-public class Quantity {
-
-    private int amount;
-
-    public Quantity(int amount) {
-        this.amount = amount;
-
+    public Quantity {
         if (amount < 0) {
             throw new IllegalArgumentException("수량은 0 보다 적을수 없습니다.");
         }
     }
 
-    public void reduceQuantity(int reduceAmount) {
-
-        if (reduceAmount < 0) {
+    public Quantity reduceQuantity(int reducingAmount) {
+        if (reducingAmount < 0) {
             throw new IllegalArgumentException("감소시킬 수량은 0 보다 크거나 같아야합니다.");
         }
 
-        if (this.amount < reduceAmount) {
-            throw new IllegalArgumentException("남아있는 수량이 부족합니다.");
+        int remainingAmount = this.amount - reducingAmount;
+
+        if (remainingAmount < 0) {
+            throw new IllegalStateException("감소시킬 수량은 남아있는 수량보다 클 수 없습니다.");
         }
 
-        this.amount -= reduceAmount;
+        return new Quantity(remainingAmount);
     }
 
-    public int reduceAll() {
-        int reducedAmount = amount;
-
-        this.amount = 0;
-
-        return reducedAmount;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(amount);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Quantity quantity1)) {
-            return false;
-        }
-        return amount == quantity1.amount;
+    public Quantity reduceQuantity(Quantity reducingQuantity) {
+        return this.reduceQuantity(
+                reducingQuantity.amount()
+        );
     }
 }
