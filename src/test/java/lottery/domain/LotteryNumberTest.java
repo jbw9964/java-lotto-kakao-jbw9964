@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -55,20 +54,54 @@ class LotteryNumberTest {
     }
 
     @Test
+    @DisplayName("주어진 길이만큼 랜덤 로또 번호 목록을 제공할 수 있다.")
+    void testRandomLotteryNumbersLength() {
+        int minLength = 0, maxLength = 45;
+
+        for (int length = minLength; length <= maxLength; length++) {
+            List<LotteryNumber> randomLotteryNumbers = LotteryNumber.getRandomLotteryNumbers(
+                    length
+            );
+
+            assertThat(randomLotteryNumbers).isNotNull().hasSize(length);
+        }
+    }
+
+    @Test
     @DisplayName("최대 최소 규칙을 만족하는 랜덤 로또 숫자를 생성할 수 있다.")
-    void testCreateRandomLotteryNumber() {
+    void testRandomLotteryNumbersRange() {
         // 확률적으로 4_050 번 시도했을 때 95% 확률로 모든 숫자가 적어도 한번씩은 뽑힘
         int testSize = 10_000;
 
-        Random random = new Random();
         Set<LotteryNumber> everyLotteryNumbers = IntStream.rangeClosed(1, 45)
                 .mapToObj(LotteryNumber::new)
                 .collect(Collectors.toSet());
 
         for (int test = 0; test < testSize; test++) {
-            LotteryNumber randomLotteryNumber = LotteryNumber.createRandomLotteryNumber(random);
+            LotteryNumber randomLotteryNumber = LotteryNumber.getRandomLotteryNumbers(1)
+                    .getFirst();
 
             assertThat(everyLotteryNumbers).contains(randomLotteryNumber);
         }
+    }
+
+    @Test
+    @DisplayName("45 보다 큰 길이의 랜덤 로또 숫자 목록은 제공할 수 없다.")
+    void testTooLargeRandomLotteryNumbersLength() {
+        int maxima = 45;
+        int tooLargeLength = maxima + 1;
+
+        assertThatThrownBy(() -> LotteryNumber.getRandomLotteryNumbers(tooLargeLength))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    @DisplayName("0 보다 적은 길이의 랜덤 로또 숫자 목록은 제공할 수 없다.")
+    void testNegativeRandomLotteryNumbersLength() {
+        int zeroLength = 0;
+        int negativeLength = zeroLength - 1;
+
+        assertThatThrownBy(() -> LotteryNumber.getRandomLotteryNumbers(negativeLength))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

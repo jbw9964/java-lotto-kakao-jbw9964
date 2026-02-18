@@ -3,7 +3,6 @@ package lottery.domain;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lottery.domain.LotteryExpression.NumberExpression;
@@ -64,14 +63,11 @@ public class Lottery {
                 ));
     }
 
-    public static Lottery createRandomLottery(Random random) {
-        Set<LotteryNumber> lotteryNumbers = new HashSet<>();
+    public static Lottery createRandomLottery() {
+        List<LotteryNumber> randomLotteryNumbers = LotteryNumber.getRandomLotteryNumbers(
+                LOTTERY_NUMBER_LENGTH
+        );
 
-        while (lotteryNumbers.size() < LOTTERY_NUMBER_LENGTH) {
-            LotteryNumber randomLotteryNumber = LotteryNumber.createRandomLotteryNumber(random);
-            lotteryNumbers.add(randomLotteryNumber);
-        }
-
-        return new Lottery(lotteryNumbers);
+        return new Lottery(randomLotteryNumbers);
     }
 }

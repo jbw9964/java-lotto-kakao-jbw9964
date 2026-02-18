@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
-import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -90,9 +89,7 @@ class LotteryTest {
     @Test
     @DisplayName("길이 규칙을 만족하는 랜덤 로또를 생성할 수 있다.")
     void testCreateRandomLottery() {
-        Random random = new Random();
-
-        Lottery randomLottery = Lottery.createRandomLottery(random);
+        Lottery randomLottery = Lottery.createRandomLottery();
 
         assertThat(randomLottery).isNotNull();
         assertThat(randomLottery.size()).isEqualTo(6);
