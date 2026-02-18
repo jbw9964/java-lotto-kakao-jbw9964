@@ -1,7 +1,6 @@
 package lottery;
 
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Stream;
 import lottery.component.LotteryResultProvider;
@@ -48,13 +47,11 @@ public class Main {
                 new MatchDescriber()
         );
 
-        lotterySeller = new LotterySeller();
-        randomLotteryGenerator = new RandomLotteryGenerator(
-                new Random()
-        );
+        lotterySeller = LotterySeller.getInstance();
+        randomLotteryGenerator = RandomLotteryGenerator.getInstance();
         lotteryResultProvider = new LotteryResultProvider(
-                new MatchTypeResolver(),
-                new MatchPrizeResolver()
+                MatchTypeResolver.getInstance(),
+                MatchPrizeResolver.getInstance()
         );
     }
 

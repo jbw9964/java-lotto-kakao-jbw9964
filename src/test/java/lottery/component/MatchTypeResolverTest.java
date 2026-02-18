@@ -29,7 +29,7 @@ class MatchTypeResolverTest {
             answerLotteryNumbers, bonusLotteryNumber
     );
 
-    private static final MatchTypeResolver MATCH_TYPE_RESOLVER = new MatchTypeResolver();
+    private static final MatchTypeResolver matchTypeResolver = MatchTypeResolver.getInstance();
 
     @ParameterizedTest
     @MethodSource("allMatches")
@@ -38,7 +38,7 @@ class MatchTypeResolverTest {
 
         Lottery lottery = createLotteryWith(expectedMatchType);
 
-        assertThat(MATCH_TYPE_RESOLVER.resolveMatchTypeWith(answerLottery, lottery))
+        assertThat(matchTypeResolver.resolveMatchTypeWith(answerLottery, lottery))
                 .isEqualTo(expectedMatchType);
     }
 

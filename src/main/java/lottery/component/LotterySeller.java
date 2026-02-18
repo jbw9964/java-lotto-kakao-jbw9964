@@ -6,6 +6,11 @@ public class LotterySeller {
 
     private static final int LOTTERY_PRICE = 1_000;
 
+    private static final LotterySeller instance = new LotterySeller();
+
+    private LotterySeller() {
+    }
+
     public Quantity issueLotteryQuantity(int purchasePrice) {
 
         int lotteryPrice = LOTTERY_PRICE;
@@ -20,5 +25,9 @@ public class LotterySeller {
         int lotteryAmount = purchasePrice / lotteryPrice;
 
         return new Quantity(lotteryAmount);
+    }
+
+    public static LotterySeller getInstance() {
+        return instance;
     }
 }

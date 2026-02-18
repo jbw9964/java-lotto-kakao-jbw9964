@@ -2,15 +2,13 @@ package lottery.component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import lottery.domain.Lottery;
 
 public class RandomLotteryGenerator {
 
-    private final Random random;
+    private static final RandomLotteryGenerator instance = new RandomLotteryGenerator();
 
-    public RandomLotteryGenerator(Random random) {
-        this.random = random;
+    private RandomLotteryGenerator() {
     }
 
     public List<Lottery> generateRandomLotteries(int numberOfLotteries) {
@@ -22,10 +20,14 @@ public class RandomLotteryGenerator {
         List<Lottery> randomLotteries = new ArrayList<>(numberOfLotteries);
 
         for (int i = 0; i < numberOfLotteries; i++) {
-            Lottery randomLottery = Lottery.createRandomLottery(random);
+            Lottery randomLottery = Lottery.createRandomLottery();
             randomLotteries.add(randomLottery);
         }
 
         return randomLotteries;
+    }
+
+    public static RandomLotteryGenerator getInstance() {
+        return instance;
     }
 }

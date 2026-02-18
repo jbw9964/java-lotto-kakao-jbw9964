@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class LotterySellerTest {
 
-    private static final LotterySeller lotterySeller = new LotterySeller();
+    private static final LotterySeller lotterySeller = LotterySeller.getInstance();
 
     @Test
     @DisplayName("구입 금액으로 매입한 로또 수량을 제공받을수 있다.")
