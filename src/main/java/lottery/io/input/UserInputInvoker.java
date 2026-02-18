@@ -35,7 +35,7 @@ public class UserInputInvoker {
         return inputProvider.provideLineAsSingleInt();
     }
 
-    public List<Lottery> getManaulLotteriesInput(int numberOfLotteries) {
+    public List<Lottery> getManualLotteriesInput(int numberOfLotteries) {
 
         if (numberOfLotteries <= 0) {
             return Collections.emptyList();

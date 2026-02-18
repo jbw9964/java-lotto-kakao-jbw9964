@@ -94,7 +94,7 @@ public class Main {
     ) {
         remainingLotteryQuantity.reduceQuantity(numberOfManualLotteries);
 
-        return userInputInvoker.getManaulLotteriesInput(numberOfManualLotteries);
+        return userInputInvoker.getManualLotteriesInput(numberOfManualLotteries);
     }
 
     private static List<Lottery> getRemainingRandomLotteries(
