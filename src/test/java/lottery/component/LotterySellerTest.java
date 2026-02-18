@@ -27,6 +27,6 @@ class LotterySellerTest {
         int insufficientPrice = 900;
 
         assertThatThrownBy(() -> lotterySeller.issueLotteryQuantity(insufficientPrice))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalStateException.class);
     }
 }

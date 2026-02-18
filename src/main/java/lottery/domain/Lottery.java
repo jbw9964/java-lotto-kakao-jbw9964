@@ -14,21 +14,30 @@ public class Lottery {
     private final Set<LotteryNumber> lotteryNumbers;
 
     public Lottery(List<LotteryNumber> lotteryNumbers) {
-        this(
-                new HashSet<>(lotteryNumbers)
-        );
+        Set<LotteryNumber> validLotteryNumbers = validateLengthsAndDuplicates(lotteryNumbers);
+
+        this.lotteryNumbers = Collections.unmodifiableSet(validLotteryNumbers);
     }
 
-    public Lottery(Set<LotteryNumber> lotteryNumbers) {
-        validateLotteryNumberLength(lotteryNumbers);
+    private static Set<LotteryNumber> validateLengthsAndDuplicates(
+            List<LotteryNumber> lotteryNumbers) {
 
-        this.lotteryNumbers = Collections.unmodifiableSet(lotteryNumbers);
-    }
+        int requiredLength = LOTTERY_NUMBER_LENGTH;
 
-    private static void validateLotteryNumberLength(Set<LotteryNumber> lotteryNumbers) {
-        if (lotteryNumbers.size() != LOTTERY_NUMBER_LENGTH) {
+        if (lotteryNumbers.size() != requiredLength) {
+            throw new IllegalArgumentException(String.format(
+                    "로또 번호 길이는 %d 자리여야 합니다.",
+                    requiredLength
+            ));
+        }
+
+        Set<LotteryNumber> refinedNumbers = new HashSet<>(lotteryNumbers);
+
+        if (refinedNumbers.size() != requiredLength) {
             throw new IllegalArgumentException("중복된 로또 번호가 제공되었습니다.");
         }
+
+        return refinedNumbers;
     }
 
     public long countMatchingLotteryNumbers(Lottery givenLottery) {
