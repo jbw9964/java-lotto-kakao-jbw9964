@@ -2,6 +2,15 @@ package lottery.io.input;
 
 public class UserInputQuery {
 
+    private static final UserInputQuery instance = new UserInputQuery();
+
+    private UserInputQuery() {
+    }
+
+    public static UserInputQuery getInstance() {
+        return instance;
+    }
+
     public String purchasePriceInputQuery() {
         return "구입금액을 입력해 주세요.";
     }

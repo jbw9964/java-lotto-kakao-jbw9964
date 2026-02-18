@@ -4,6 +4,15 @@ import lottery.domain.MatchType;
 
 public class MatchDescriber {
 
+    private static final MatchDescriber instance = new MatchDescriber();
+
+    private MatchDescriber() {
+    }
+
+    public static MatchDescriber getInstance() {
+        return instance;
+    }
+
     public String describe(MatchType matchType) {
 
         if (matchType == null) {

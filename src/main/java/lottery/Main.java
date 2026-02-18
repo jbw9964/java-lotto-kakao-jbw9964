@@ -34,7 +34,7 @@ public class Main {
 
     static {
         userInputInvoker = new UserInputInvoker(
-                new UserInputQuery(),
+                UserInputQuery.getInstance(),
                 new InputProvider(new Scanner(
                         System.in
                 ))
@@ -44,7 +44,7 @@ public class Main {
         );
         lotteryResultDescriber = new LotteryResultDescriber(
                 MatchType.valuesExcept(MatchType.NONE),
-                new MatchDescriber()
+                MatchDescriber.getInstance()
         );
 
         lotterySeller = LotterySeller.getInstance();
