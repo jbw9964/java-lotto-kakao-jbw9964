@@ -16,8 +16,26 @@ class QuantityTest {
     }
 
     @Test
-    @DisplayName("특정 양을 소비한 수량을 제공받을 수 있다.")
-    void testReduceQuantity() {
+    @DisplayName("특정 양을 소비한 수량을 제공받을 수 있다. (int)")
+    void testReduceQuantityWithInt() {
+        int totalAmount = 5;
+
+        Quantity totalQuantity = new Quantity(totalAmount);
+
+        for (int reducingAmount = 0; reducingAmount <= totalAmount; reducingAmount++) {
+
+            Quantity expectedQuantity = new Quantity(
+                    totalAmount - reducingAmount
+            );
+
+            assertThat(totalQuantity.reduceQuantity(reducingAmount))
+                    .isEqualTo(expectedQuantity);
+        }
+    }
+
+    @Test
+    @DisplayName("특정 양을 소비한 수량을 제공받을 수 있다. (Quantity)")
+    void testReduceQuantityWithQuantity() {
         int totalAmount = 5;
 
         Quantity totalQuantity = new Quantity(totalAmount);
@@ -30,8 +48,6 @@ class QuantityTest {
                     totalAmount - reducingAmount
             );
 
-            assertThat(totalQuantity.reduceQuantity(reducingAmount))
-                    .isEqualTo(expectedQuantity);
             assertThat(totalQuantity.reduceQuantity(reducingQuantity))
                     .isEqualTo(expectedQuantity);
         }
