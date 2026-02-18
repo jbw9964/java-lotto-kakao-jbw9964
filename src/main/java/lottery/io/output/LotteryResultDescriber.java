@@ -1,16 +1,21 @@
 package lottery.io.output;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import lottery.domain.LotteryResult;
 import lottery.domain.MatchType;
 
 public class LotteryResultDescriber {
 
-    private final MatchType[] matchesToIncludeResult;
+    private final MatchTypesToIncludeResult matchesToIncludeResult;
     private final MatchDescriber matchDescriber;
 
-    public LotteryResultDescriber(MatchType[] matchesToIncludeResult,
-            MatchDescriber matchDescriber) {
-        this.matchesToIncludeResult = matchesToIncludeResult;
+    public LotteryResultDescriber(
+            MatchType[] matchesToIncludeResult,
+            MatchDescriber matchDescriber
+    ) {
+        this.matchesToIncludeResult = new MatchTypesToIncludeResult(matchesToIncludeResult);
         this.matchDescriber = matchDescriber;
     }
 
@@ -31,7 +36,7 @@ public class LotteryResultDescriber {
     }
 
     private void buildMatchResult(LotteryResult lotteryResult, StringBuilder dst) {
-        for (MatchType matchType : this.matchesToIncludeResult) {
+        for (MatchType matchType : this.matchesToIncludeResult.getMatchTypes()) {
             String representation = matchDescriber.describe(matchType);
 
             long count = lotteryResult.countBy(matchType);
@@ -59,5 +64,25 @@ public class LotteryResultDescriber {
     private static double getProfitRateWith(int purchasedPrice, LotteryResult result) {
         long totalPrize = result.getTotalPrize();
         return (double) totalPrize / purchasedPrice;
+    }
+
+    @SuppressWarnings("ClassCanBeRecord")
+    private static class MatchTypesToIncludeResult {
+
+        private final List<MatchType> matchTypes;
+
+        private MatchTypesToIncludeResult(MatchType[] matchTypes) {
+            this(
+                    Arrays.asList(matchTypes)
+            );
+        }
+
+        private MatchTypesToIncludeResult(List<MatchType> matchTypes) {
+            this.matchTypes = Collections.unmodifiableList(matchTypes);
+        }
+
+        private List<MatchType> getMatchTypes() {
+            return this.matchTypes;
+        }
     }
 }
