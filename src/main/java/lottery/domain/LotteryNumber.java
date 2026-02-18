@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lottery.domain.LotteryExpression.NumberExpression;
 
-public class LotteryNumber {
+public class LotteryNumber implements Comparable<LotteryNumber> {
 
     private static final int
             LOTTERY_MIN_NUMBER = 1,
@@ -43,6 +43,11 @@ public class LotteryNumber {
         Function<Integer, String> numberToStringConverter = numberExpression.numberToStringConverter();
 
         return numberToStringConverter.apply(this.number);
+    }
+
+    @Override
+    public int compareTo(LotteryNumber o) {
+        return Integer.compare(this.number, o.number);
     }
 
     @Override

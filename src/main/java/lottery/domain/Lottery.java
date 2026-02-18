@@ -66,6 +66,7 @@ public class Lottery {
         NumberExpression numberExpression = expression.numberExpression();
 
         return this.lotteryNumbers.stream()
+                .sorted()
                 .map(lotteryNumber -> lotteryNumber.representWith(numberExpression))
                 .collect(Collectors.joining(
                         numberDeliminator, leftBracket, rightBracket

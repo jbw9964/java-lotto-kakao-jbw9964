@@ -19,15 +19,15 @@ class LotteryTest {
     @Test
     @DisplayName("로또 번호는 오직 6 자리만 허용한다.")
     void testInvalidNumberSize() {
-        List<LotteryNumber> insufficientNumbers = oneToTwenty.subList(0, 4);
-        List<LotteryNumber> tooManyNumbers = oneToTwenty.subList(0, 7);
-        List<LotteryNumber> validNumbers = oneToTwenty.subList(0, 6);
+        List<LotteryNumber> fiveNumbers = oneToTwenty.subList(0, 4);
+        List<LotteryNumber> sevenNumbers = oneToTwenty.subList(0, 7);
+        List<LotteryNumber> sixNumbers = oneToTwenty.subList(0, 6);
 
-        assertThatThrownBy(() -> new Lottery(insufficientNumbers))
+        assertThatThrownBy(() -> new Lottery(fiveNumbers))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> new Lottery(tooManyNumbers))
+        assertThatThrownBy(() -> new Lottery(sevenNumbers))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatCode(() -> new Lottery(validNumbers))
+        assertThatCode(() -> new Lottery(sixNumbers))
                 .doesNotThrowAnyException();
     }
 
