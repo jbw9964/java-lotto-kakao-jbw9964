@@ -61,7 +61,7 @@ public class Main {
 
         Quantity totalLotteryQuantity = lotterySeller.issueLotteryQuantity(purchasePrice);
 
-        List<Lottery> purchasedLotteries = getAllLotteryInputsAndPrintAllWith(totalLotteryQuantity);
+        List<Lottery> purchasedLotteries = getAllLotteriesAndPrintAllWith(totalLotteryQuantity);
 
         AnswerLottery answerLottery = userInputInvoker.getAnswerLotteryInput();
 
@@ -74,30 +74,34 @@ public class Main {
         System.out.println(report);
     }
 
-    private static List<Lottery> getAllLotteryInputsAndPrintAllWith(Quantity totalLotteryQuantity) {
+    private static List<Lottery> getAllLotteriesAndPrintAllWith(Quantity totalLotteryQuantity) {
         int numberOfManualLotteries = userInputInvoker.getNumberOfManualLotteriesInput();
 
-        List<Lottery> manualLotteries = getManualLotteries(
-                totalLotteryQuantity, numberOfManualLotteries
+        Quantity randomLotteryQuantity = totalLotteryQuantity.reduceQuantity(
+                numberOfManualLotteries
         );
 
-        List<Lottery> randomLotteries = getRemainingRandomLotteries(totalLotteryQuantity);
+        Quantity manualLotteryQuantity = totalLotteryQuantity.reduceQuantity(
+                randomLotteryQuantity
+        );
+
+        List<Lottery> manualLotteries = getManualLotteries(manualLotteryQuantity);
+
+        List<Lottery> randomLotteries = getRandomLotteries(randomLotteryQuantity);
 
         return concatLotteriesAndPrintAll(manualLotteries, randomLotteries);
     }
 
     private static List<Lottery> getManualLotteries(
-            Quantity remainingLotteryQuantity, int numberOfManualLotteries
+            Quantity manualLotteryQuantity
     ) {
-        remainingLotteryQuantity.reduceQuantity(numberOfManualLotteries);
+        int numberOfManualLotteries = manualLotteryQuantity.amount();
 
         return userInputInvoker.getManualLotteriesInput(numberOfManualLotteries);
     }
 
-    private static List<Lottery> getRemainingRandomLotteries(
-            Quantity remainingLotteryQuantity
-    ) {
-        int numberOfRandomLotteries = remainingLotteryQuantity.reduceAll();
+    private static List<Lottery> getRandomLotteries(Quantity randomLotteryQuantity) {
+        int numberOfRandomLotteries = randomLotteryQuantity.amount();
 
         return randomLotteryGenerator.generateRandomLotteries(numberOfRandomLotteries);
     }
